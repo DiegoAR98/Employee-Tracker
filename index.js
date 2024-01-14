@@ -1,19 +1,25 @@
+// Importing necessary modules
 const inquirer = require('inquirer');
 const connection = require('./db/connection');
+
+// Importing classes for department, role, and employee management
 const Department = require('./lib/Department');
 const Role = require('./lib/Role');
 const Employee = require('./lib/Employe'); 
-// Instantiate the classes
+
+// Creating instances of the classes with a database connection
 const department = new Department(connection);
 const role = new Role(connection);
 const employee = new Employee(connection);
 
+// Main menu function for the application
 function mainMenu() {
   inquirer.prompt({
     type: 'list',
     name: 'action',
     message: 'What would you like to do?',
     choices: [
+        // Options for various operations
       'View All Departments',
       'View All Roles',
       'View All Employees',
@@ -25,6 +31,7 @@ function mainMenu() {
     ]
   })
   .then(answer => {
+     // Handling the user's choice
     switch (answer.action) {
       case 'View All Departments':
         viewAllDepartments();
@@ -51,12 +58,14 @@ function mainMenu() {
         connection.end();
         break;
       default:
+        // Handling invalid input
         console.log("Invalid action");
         mainMenu();
     }
   });
 }
 
+// Function to view all departments
 function viewAllDepartments() {
   department.viewAllDepartments().then(([rows]) => {
     console.table(rows);
@@ -64,6 +73,7 @@ function viewAllDepartments() {
   });
 }
 
+//Function to view all Roles
 function viewAllRoles() {
   role.viewAllRoles().then(([rows]) => {
     console.table(rows);
@@ -71,6 +81,7 @@ function viewAllRoles() {
   });
 }
 
+//Function to view all Employees
 function viewAllEmployees() {
   employee.viewAllEmployees().then(([rows]) => {
     console.table(rows);
@@ -78,13 +89,16 @@ function viewAllEmployees() {
   });
 }
 
+// Function to add a new department
 function addDepartment() {
   inquirer.prompt({
+    // Prompting for the name of the new department
     type: 'input',
     name: 'name',
     message: 'What is the name of the department?'
   })
   .then(answer => {
+    // Adding the new department to the database
     department.addDepartment(answer.name).then(() => {
       console.log(`Added ${answer.name} to the database.`);
       mainMenu();
@@ -92,8 +106,10 @@ function addDepartment() {
   });
 }
 
+// Function to add a new role
 function addRole() {
   department.viewAllDepartments().then(([departments]) => {
+    // Mapping department data for selection
     const departmentChoices = departments.map(({ id, name }) => ({
       name: name,
       value: id
@@ -118,6 +134,7 @@ function addRole() {
       }
     ])
     .then(answers => {
+      // Adding the new role to the database
       role.addRole(answers.title, answers.salary, answers.department_id).then(() => {
         console.log(`Added ${answers.title} role to the database.`);
         mainMenu();
@@ -126,6 +143,7 @@ function addRole() {
   });
 }
 
+// Function to add a new employee
 function addEmployee() {
   role.viewAllRoles().then(([roles]) => {
     const roleChoices = roles.map(({ id, title }) => ({
@@ -139,7 +157,7 @@ function addEmployee() {
         value: id
       }));
       managerChoices.unshift({ name: 'None', value: null });
-
+// Prompting for details of the new employee
       inquirer.prompt([
         {
           type: 'input',
@@ -174,6 +192,7 @@ function addEmployee() {
   });
 }
 
+// Function to update an existing employee's role
 function updateEmployeeRole() {
   employee.viewAllEmployees().then(([employees]) => {
     const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
