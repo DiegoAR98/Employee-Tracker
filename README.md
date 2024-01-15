@@ -14,6 +14,12 @@ Employee Tracker is a command-line application for managing a company's employee
 
 To use the Employee Tracker, follow these steps:
 
+## Technologies Used
+
+- Node.js
+- MySQL2
+- Inquirer.js
+
 ### Starting the Application
 
 1. Open your terminal.
