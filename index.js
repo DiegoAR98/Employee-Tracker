@@ -19,7 +19,6 @@ function mainMenu() {
     name: 'action',
     message: 'What would you like to do?',
     choices: [
-        // Options for various operations
       'View All Departments',
       'View All Roles',
       'View All Employees',
@@ -27,6 +26,13 @@ function mainMenu() {
       'Add a Role',
       'Add an Employee',
       'Update an Employee Role',
+      'Update Employee Manager',
+      'View Employees by Manager',
+      'View Employees by Department',
+      'Delete Department',
+      'Delete Role',
+      'Delete Employee',
+      'View Department Budget',
       'Exit'
     ]
   })
