@@ -47,4 +47,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Walkthrough Video
 
-For a walkthrough video that demonstrates the functionality of the application, click [here](https://drive.google.com/file/d/183mmABMVDg5yrkVqt5eT_r1QbBg3-Y7v/view), for bonus functions click here [here](https://drive.google.com/file/d/1JQKmfHjx899mX7syaF7r4-DUeWn4_EYl/view),.
+For a walkthrough video that demonstrates the functionality of the application, click [here](https://drive.google.com/file/d/183mmABMVDg5yrkVqt5eT_r1QbBg3-Y7v/view), for bonus functions click here [here](https://drive.google.com/file/d/1JQKmfHjx899mX7syaF7r4-DUeWn4_EYl/view).
