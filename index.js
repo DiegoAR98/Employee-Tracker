@@ -416,9 +416,13 @@ function viewDepartmentBudget() {
       choices: departmentChoices
     })
     .then(answer => {
-      query.viewDepartmentBudget(answer.departmentId).then(([budget]) => {
-        console.log(`Total Budget: ${budget.total_budget}`);
-        mainMenu();
+      query.viewDepartmentBudget(answer.departmentId).then(([results]) => {
+          if (results[0] && results[0].total_budget != null) {
+              console.log(`Total Budget: ${results[0].total_budget}`);
+          } else {
+              console.log('Total Budget: No data available');
+          }
+          mainMenu();
       });
     });
   });
