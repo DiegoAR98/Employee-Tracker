@@ -2,15 +2,19 @@
 const inquirer = require('inquirer');
 const connection = require('./db/connection');
 
+
+
 // Importing classes for department, role, and employee management
 const Department = require('./lib/Department');
 const Role = require('./lib/Role');
 const Employee = require('./lib/Employe'); 
+const Query = require ('./lib/Query');
 
 // Creating instances of the classes with a database connection
 const department = new Department(connection);
 const role = new Role(connection);
 const employee = new Employee(connection);
+const query = new Query(connection);
 
 // Main menu function for the application
 function mainMenu() {
@@ -256,6 +260,170 @@ function updateEmployeeRole() {
     });
   });
 }
+// Function to update the manager of an employee
+function updateEmployeeManager() {
+  employee.viewAllEmployees().then(([employees]) => {
+    const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+      name: `${first_name} ${last_name}`,
+      value: id
+    }));
+
+    inquirer.prompt([
+      {
+        type: 'list',
+        name: 'employeeId',
+        message: "Select the employee whose manager needs to be updated:",
+        choices: employeeChoices
+      },
+      {
+        type: 'list',
+        name: 'managerId',
+        message: "Select the new manager:",
+        choices: employeeChoices
+      }
+    ])
+    .then(answers => {
+      query.updateEmployeeManager(answers.employeeId, answers.managerId).then(() => { 
+        console.log(`Manager updated for employee ID ${answers.employeeId}`);
+        mainMenu();
+  
+      });
+    });
+  });
+}
+// Function to view employees who report to a specific manager
+function viewEmployeesByManager() {
+  employee.viewAllEmployees().then(([managers]) => {
+    const managerChoices = managers.map(({ id, first_name, last_name }) => ({
+      name: `${first_name} ${last_name}`,
+      value: id
+    }));
+
+    inquirer.prompt({
+      type: 'list',
+      name: 'managerId',
+      message: "Select the manager to view their employees:",
+      choices: managerChoices
+    })
+    .then(answer => {
+      query.findEmployeesByManager(answer.managerId).then(([employees]) => { 
+        console.table(employees);
+        mainMenu();
+      });
+    });
+  });
+}
+// Function to view employees within a specific department
+function viewEmployeesByDepartment() {
+  department.viewAllDepartments().then(([departments]) => {
+    const departmentChoices = departments.map(({ id, name }) => ({
+      name: name,
+      value: id
+    }));
+
+    inquirer.prompt({
+      type: 'list',
+      name: 'departmentId',
+      message: "Select the department to view its employees:",
+      choices: departmentChoices
+    })
+    .then(answer => {
+      query.findEmployeesByDepartment(answer.departmentId).then(([employees]) => { 
+        console.table(employees);
+        mainMenu();
+      });
+    });
+  });
+}
+// Function to delete a specific department
+function deleteDepartment() {
+  department.viewAllDepartments().then(([departments]) => {
+    const departmentChoices = departments.map(({ id, name }) => ({
+      name: name,
+      value: id
+    }));
+
+    inquirer.prompt({
+      type: 'list',
+      name: 'departmentId',
+      message: "Select the department to delete:",
+      choices: departmentChoices
+    })
+    .then(answer => {
+      query.deleteDepartmentById(answer.departmentId).then(() => {
+        console.log(`Department deleted.`);
+        mainMenu();
+      });
+    });
+  });
+}
+// Function to delete a specific role
+function deleteRole() {
+  role.viewAllRoles().then(([roles]) => {
+    const roleChoices = roles.map(({ id, title }) => ({
+      name: title,
+      value: id
+    }));
+
+    inquirer.prompt({
+      type: 'list',
+      name: 'roleId',
+      message: "Select the role to delete:",
+      choices: roleChoices
+    })
+    .then(answer => {
+      query.deleteRoleById(answer.roleId).then(() => {
+        console.log(`Role deleted.`);
+        mainMenu();
+      });
+    });
+  });
+}
+// Function to delete a specific employee
+function deleteEmployee() {
+  employee.viewAllEmployees().then(([employees]) => {
+    const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+      name: `${first_name} ${last_name}`,
+      value: id
+    }));
+
+    inquirer.prompt({
+      type: 'list',
+      name: 'employeeId',
+      message: "Select the employee to delete:",
+      choices: employeeChoices
+    })
+    .then(answer => {
+      query.deleteEmployeeById(answer.employeeId).then(() => { 
+        console.log(`Employee deleted.`);
+        mainMenu();
+      });
+    });
+  });
+}
+
+function viewDepartmentBudget() {
+  department.viewAllDepartments().then(([departments]) => {
+    const departmentChoices = departments.map(({ id, name }) => ({
+      name: name,
+      value: id
+    }));
+
+    inquirer.prompt({
+      type: 'list',
+      name: 'departmentId',
+      message: "Select the department to view its total budget:",
+      choices: departmentChoices
+    })
+    .then(answer => {
+      query.viewDepartmentBudget(answer.departmentId).then(([budget]) => {
+        console.log(`Total Budget: ${budget.total_budget}`);
+        mainMenu();
+      });
+    });
+  });
+}
+
 
 // Start the application by calling mainMenu
 mainMenu();
