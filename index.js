@@ -60,6 +60,27 @@ function mainMenu() {
       case 'Update an Employee Role':
         updateEmployeeRole();
         break;
+        case 'Update Employee Manager':
+          updateEmployeeManager();
+          break;
+        case 'View Employees by Manager':
+          viewEmployeesByManager();
+          break;
+        case 'View Employees by Department':
+          viewEmployeesByDepartment();
+          break;
+        case 'Delete Department':
+          deleteDepartment();
+          break;
+        case 'Delete Role':
+          deleteRole();
+          break;
+        case 'Delete Employee':
+          deleteEmployee();
+          break;
+        case 'View Department Budget':
+          viewDepartmentBudget();
+          break;
       case 'Exit':
         connection.end();
         break;
